@@ -1,1 +1,73 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ltc.rip | @crypto</title>
+<meta name="description" content="don't cut yourself its harmful.">
+<meta name="theme-color" content="#ff9e9e">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+::selection{background:#ff9e9e;color:#0a0a0a}
+html,body{height:100%;font-family:-apple-system,system-ui,'Segoe UI',Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0a0a0a,#111);overflow:hidden;color:#e6e6e6}
+body::before{content:"";position:fixed;width:900px;height:900px;background:radial-gradient(circle,#ff9e9e22,transparent 70%);filter:blur(140px);animation:float 16s ease-in-out infinite}
+@keyframes float{0%{transform:translateY(-50px) translateX(-20px)}50%{transform:translateY(50px) translateX(20px)}100%{transform:translateY(-50px) translateX(-20px)}}
+.container{width:90%;max-width:420px;padding:40px 30px;text-align:center;background:rgba(255,255,255,0.04);border-radius:30px;border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(20px) saturate(150%);box-shadow:0 15px 40px rgba(0,0,0,0.5);animation:fadeIn 0.9s ease forwards;transition:transform 0.6s ease,opacity 0.6s ease}
+.container.fade{opacity:0;transform:translateY(-60px) scale(.96)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+.logo{width:80px;height:80px;margin-bottom:16px;border-radius:24px;animation:logoFloat 6s ease-in-out infinite;transition:transform 0.8s ease,opacity 0.8s ease}
+.logo:hover{transform:scale(1.06);opacity:.85}
+@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.logo.fadeout{opacity:0;transform:translateY(-10px) scale(.95)}
+.domain{font-size:20px;font-weight:600;margin-bottom:20px;letter-spacing:.4px}
+.title{font-size:24px;font-weight:600;margin-bottom:6px}
+.subtitle{font-size:15px;opacity:.65;margin-bottom:24px}
+.bar{height:4px;border-radius:24px;overflow:hidden;background:rgba(28,28,28,0.35);margin-bottom:22px}
+.progress{height:100%;width:0%;background:linear-gradient(90deg,#ff9e9e,#ffc1c1,#ff9e9e);background-size:200%;animation:shine 2s linear infinite;transition:width 3s cubic-bezier(.22,1,.36,1)}
+@keyframes shine{0%{background-position:0}100%{background-position:200%}}
+.info{background:rgba(255,255,255,0.03);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:16px;font-family:monospace;font-size:13px;line-height:1.7;text-align:left;opacity:.75;margin-top:18px}
+.row{display:flex;justify-content:space-between;gap:12px}
+.footer{font-family:monospace;font-size:12px;opacity:.5;margin-top:14px}
+.censored{background:#ff9e9e22;color:#ff9e9e;padding:2px 5px;border-radius:6px}
+.error{margin-top:14px;font-size:14px;color:#ff8b8b;opacity:.85;text-align:center}
+iframe{position:fixed;top:0;left:0;width:100%;height:100%;border:none;opacity:0;transform:scale(1.03);transition:opacity 1s ease,transform 1s ease}
+iframe.show{opacity:1;transform:scale(1)}
+.turnstile-wrapper{width:0;height:0;overflow:hidden;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="container" id="container">
+<img class="logo" id="logo" src="https://i.ibb.co/6RJXRz5w/Transparent-PFP.gif">
+<div class="domain">ltc.rip</div>
+<div class="title">Checking your browser</div>
+<div class="subtitle">Please complete the security check to continue</div>
+<div class="bar"><div class="progress" id="progress"></div></div>
+<div class="turnstile-wrapper">
+<div class="cf-turnstile" data-sitekey="0x4AAAAAACrgEzHIHFiJc0_L" data-callback="verified" data-error-callback="failed" data-expired-callback="failed"></div>
+</div>
+<div class="error" id="error"></div>
+<div class="info">
+<div class="row">Ray ID <span id="ray"></span></div>
+<div class="row">Trace ID <span id="trace"></span></div>
+<div class="row">Hash <span id="hash"></span></div>
+<div class="row">Timestamp <span id="time"></span></div>
+</div>
+<div class="footer">IP: <span id="ip">loading...</span></div>
+</div>
+<iframe id="site"></iframe>
+<script>
+if(location.pathname=="/"||location.pathname=="")location.replace("/crypto")
+function rand(l){const c="abcdef0123456789";let o="";for(let i=0;i<l;i++){o+=c[Math.floor(Math.random()*c.length)]}return o}
+function censorIP(ip){const p=ip.split(".");return p.length===4?`${p[0]}.${p[1]}.<span class='censored'>***</span>.<span class='censored'>***</span>`:ip}
+ray.textContent=rand(16)
+trace.textContent=rand(20)
+hash.textContent=rand(20)
+time.textContent=new Date().toLocaleString()
+setTimeout(()=>{progress.style.width="100%"},700)
+fetch("https://api.ipify.org?format=json").then(r=>r.json()).then(d=>{ip.innerHTML=censorIP(d.ip)})
+function verified(){const c=document.getElementById("container"),f=document.getElementById("site"),l=document.getElementById("logo");l.classList.add("fadeout");f.src="https://frail.lol/xbox";f.onload=()=>{document.title="ltc.rip | @crypto";history.replaceState(null,null,"/crypto")};setTimeout(()=>{c.classList.add("fade")},600);setTimeout(()=>{f.classList.add("show")},1200)}
+function failed(){const e=document.getElementById("error");e.textContent="Verification failed. Retrying...";setTimeout(()=>{turnstile.reset();e.textContent=""},2500)}
+</script>
+</body>
+</html>
